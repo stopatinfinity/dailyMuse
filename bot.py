@@ -1,6 +1,9 @@
 import tweepy
 import time
+import random
+
 from keys import *
+from youtube import *
 
 print('Welcome to Daily Muse!', flush = True)
 
@@ -31,7 +34,7 @@ def store_last_seen_id(last_seen_id, file_name):
 
 def reply_to_tweets():
     print('Retrieving and replying to tweets...', flush=True)
-    # DEV NOTE: use 1060651988453654528 for testing.
+    
     last_seen_id = retrieve_last_seen_id(FILE_NAME)
 
     # NOTE: We need to use tweet_mode='extended' below to show
@@ -43,13 +46,14 @@ def reply_to_tweets():
         print(str(mention.id) + ' - ' + mention.full_text, flush=True)
         last_seen_id = mention.id
         store_last_seen_id(last_seen_id, FILE_NAME)
-        print(mention.full_text)
         if '#lovesong' in mention.full_text.lower():
-            print('Someone wants a perfect love song!', flush=True)
+            print('Someone wants a love song!', flush=True)
             print('Responding back...', flush=True)
+            link = random.choice(getSong('love song'))
             api.update_status('@' + mention.user.screen_name +
-                    ' Here you go! https://www.youtube.com/watch?v=qi7Yh16dA0w', mention.id)
+                    ' Here you go! ' + link, mention.id)
 
-while True:
-    reply_to_tweets()
-    time.sleep(15)
+if __name__ == '__main__':
+    while True:
+        reply_to_tweets()
+        time.sleep(15)
